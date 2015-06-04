@@ -8,7 +8,6 @@
 #include <ctype.h>
 #include <time.h>
 
-
 void print_tree(TREE_NODE *n, int level){
   int i;
   for (i = 0; i < level; ++i)
@@ -105,8 +104,6 @@ TREE_NODE * index_file(char *file_name){
     current_line++;
   }
 
-  /*print_function p = print_tree;*/
-  /*print_all(tree, p, 1);*/
   fclose ( file );
   return tree;
 }
@@ -116,13 +113,19 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
     return;
   }
   else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 0){
-    strcpy(result, "achou ");
+    strcpy(result, "Consulta: ");
+    strcat(result, ( (W_TOKEN *)word )->word);
+    strcat(result, "\tPalavra encontrada nas linhas ");
     char line[20];
     line[0] = '\0';
+    int first_number = 1;
     while(( (W_TOKEN *)( root->data ) )->list){
-      sprintf(line, "%d ", *(int *)( (LIST_NODE *)( (W_TOKEN *)( root->data ) )->list )->data);
+      if(!first_number)
+        strcat(result, ", ");
+      sprintf(line, "%d", *(int *)( (LIST_NODE *)( (W_TOKEN *)( root->data ) )->list )->data);
       strcat(result, line);
       ( (W_TOKEN *)( root->data ) )->list = ( (W_TOKEN *)( root->data ) )->list->next;
+      first_number = 0;
     }
     return;
   }
@@ -137,29 +140,49 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
 
 }
 
+void search_words(TREE_NODE *root, char * file_name){
+  FILE *file;
+  file = fopen(file_name,"r");
+  if(!file){
+    printf("arquivo de entrada invalido\n");
+    return;
+  }
+  char line [ 1000 ];
+
+  char *result = malloc(sizeof(char) * 150);
+
+  double start_time, end_time, time_elapsed;
+  start_time = (double)clock();
+
+  while ( fgets ( line, sizeof line, file ) != NULL ){//read line by line
+    line[strlen(line) -1] = '\0';//remove new line char
+    W_TOKEN *token = malloc(sizeof(W_TOKEN));
+    token->word = line;
+    search_word(root, token, result);
+    printf("%s\n", result );
+  }
+
+  end_time = (double)clock();
+  time_elapsed = ( end_time - start_time )/CLOCKS_PER_SEC;
+
+  printf("\n");
+  printf("O tempo gasto na busca foi de %fms.", time_elapsed*1000);
+
+  fclose(file);
+
+}
+
 int main(int argc, char *argv[])
 {
-  if(argc != 2){
+  if(argc != 3){
     printf("entrada invalida\n");
     return 0;
   }
 
   TREE_NODE *tree = NULL;
-
-  char *result = malloc(sizeof(char) * 150);
-  char *c = "coração";
-  W_TOKEN *a = malloc(sizeof(W_TOKEN));
-  a->word = c;
-
   tree = index_file(argv[1]);
 
-  double start_time, end_time, time_elapsed;
-  start_time = (double)clock();
-  search_word(tree, a, result);
-  end_time = (double)clock();
-
-  time_elapsed = ( end_time - start_time )/CLOCKS_PER_SEC;
-  printf("%s %fms", result, time_elapsed*1000);
+  search_words(tree, argv[2]);
 
   return 0;
 }
