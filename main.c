@@ -88,7 +88,7 @@ TREE_NODE * index_file(char *file_name){
 
   char line [ 10000 ];
   char *token;
-  const char delimiters[] = " \n,.;'\"?:*&!@$%{}()[]<>\\";
+  const char delimiters[] = " \n,.;'\"?-|:*&!@$%{}()[]<>\\";
   int current_line = 1;
   TREE_NODE *tree = NULL;
   W_TOKEN *w_token = NULL;

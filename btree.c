@@ -52,7 +52,7 @@ int line_in_list(LIST_NODE *head, int line){
   return 0;
 }
 
-void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
+void insert_avl(TREE_NODE** t, void *data, comparator comparator, int line ){
   int *line_number = malloc(sizeof(int));
   *line_number = line;
   if(!*t){//insert new node in tree
@@ -63,24 +63,24 @@ void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
     (*t)->height = 0;
     (*t)->left = (*t)->right = NULL;
   }
-  else if (filter(data , (*t)->data) == -1 ){
-    insert_avl( &((*t)->left), data, filter, line );
+  else if (comparator(data , (*t)->data) == -1 ){
+    insert_avl( &((*t)->left), data, comparator, line );
     if( height( (*t)->left ) - height( (*t)->right ) == 2 ){
-      if (filter(data , (*t)->left->data) == -1 ){
+      if (comparator(data , (*t)->left->data) == -1 ){
         *t = rotate_left( *t );
       }
-      else if (filter(data , (*t)->left->data) == 1 ){
+      else if (comparator(data , (*t)->left->data) == 1 ){
         *t = double_left_rotate( *t );
       }
     }
   }
-  else if (filter(data , (*t)->data) == 1 ){
-    insert_avl( &( (*t)->right ), data, filter, line );
+  else if (comparator(data , (*t)->data) == 1 ){
+    insert_avl( &( (*t)->right ), data, comparator, line );
     if( height( (*t)->right ) - height( (*t)->left ) == 2 ){
-      if (filter(data , (*t)->right->data) == 1 ){
+      if (comparator(data , (*t)->right->data) == 1 ){
         *t = rotate_right( *t );
       }
-      else if (filter(data , (*t)->right->data) == -1 ){
+      else if (comparator(data , (*t)->right->data) == -1 ){
         *t = double_right_rotate( *t );
       }
     }
@@ -117,7 +117,7 @@ int same(TREE_NODE *root1, TREE_NODE *root2){
 
 }
 
-void insert(TREE_NODE **root, void *data, filter filter){
+void insert(TREE_NODE **root, void *data, comparator comparator){
   if (!*root)
   {
     *root = (TREE_NODE *) malloc(sizeof(TREE_NODE) );
@@ -126,12 +126,12 @@ void insert(TREE_NODE **root, void *data, filter filter){
     (*root)->left = NULL;
 
   }
-  else if (filter(data , (*root)->data) )//left
+  else if (comparator(data , (*root)->data) )//left
   {
-    insert(&(*root)->left, data, filter);
+    insert(&(*root)->left, data, comparator);
   }
   else{
-    insert(&(*root)->right, data, filter);
+    insert(&(*root)->right, data, comparator);
   }
 
 }

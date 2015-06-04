@@ -1,7 +1,7 @@
 #ifndef BTREE
 #define BTREE
 
-typedef int (*filter)(void *, void *);
+typedef int (*comparator)(void *, void *);
 
 typedef struct NODE_T {
   void * data;
@@ -13,8 +13,8 @@ typedef struct NODE_T {
 
 typedef void (*print_function)(TREE_NODE *, int);
 
-void insert(TREE_NODE **root, void *data, filter filter);
-void insert_avl(TREE_NODE** t, void *data, filter filter, int line );
+void insert(TREE_NODE **root, void *data, comparator comparator);
+void insert_avl(TREE_NODE** t, void *data, comparator comparator, int line );
 void print_all(TREE_NODE *root, print_function f, int level);
 void print_pre_left(TREE_NODE *root, print_function f);
 int tree_size(TREE_NODE *root);
