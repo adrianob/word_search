@@ -41,6 +41,17 @@ TREE_NODE* double_right_rotate( TREE_NODE* root )
   return rotate_right( root );
 }
 
+int line_in_list(LIST_NODE *head, int line){
+  while(head){
+    if(*(int *)( head->data ) == line){
+      return 1;
+    }
+    head = head->next;
+  }
+
+  return 0;
+}
+
 void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
   int *l;
   l = malloc(sizeof(int));
@@ -48,7 +59,8 @@ void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
   if( *t == NULL ){
     *t = (TREE_NODE*)malloc(sizeof(TREE_NODE));
     (*t)->data = data;
-    push(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
+    if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
+      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
     (*t)->height = 0;
     (*t)->left = (*t)->right = NULL;
   }
@@ -75,7 +87,8 @@ void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
     }
   }
   else{
-    push(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
+    if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
+      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
   }
 
   (*t)->height = max( height( (*t)->left ), height( (*t)->right ) ) + 1;
