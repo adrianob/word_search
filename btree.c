@@ -6,27 +6,27 @@
 
 TREE_NODE * rotate_left( TREE_NODE* root )
 {
-  TREE_NODE* k1 = NULL;
-  k1 = root->left;
-  root->left = k1->right;
-  k1->right = root;
+  TREE_NODE* node = NULL;
+  node = root->left;
+  root->left = node->right;
+  node->right = root;
   root->height = max( height( root->left ), height( root->right ) ) + 1;
-  k1->height = max( height( k1->left ), root->height ) + 1;
-  return k1;
+  node->height = max( height( node->left ), root->height ) + 1;
+  return node;
 }
 
 TREE_NODE* rotate_right( TREE_NODE* root )
 {
-  TREE_NODE* k2;
+  TREE_NODE* node;
 
-  k2 = root->right;
-  root->right = k2->left;
-  k2->left = root;
+  node = root->right;
+  root->right = node->left;
+  node->left = root;
 
   root->height = max( height( root->left ), height( root->right ) ) + 1;
-  k2->height = max( height( k2->right ), root->height ) + 1;
+  node->height = max( height( node->right ), root->height ) + 1;
 
-  return k2;
+  return node;
 }
 
 TREE_NODE* double_left_rotate( TREE_NODE* root )
@@ -53,14 +53,13 @@ int line_in_list(LIST_NODE *head, int line){
 }
 
 void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
-  int *l;
-  l = malloc(sizeof(int));
-  *l = line;
-  if( *t == NULL ){
+  int *line_number = malloc(sizeof(int));
+  *line_number = line;
+  if(!*t){//insert new node in tree
     *t = (TREE_NODE*)malloc(sizeof(TREE_NODE));
     (*t)->data = data;
     if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
-      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
+      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
     (*t)->height = 0;
     (*t)->left = (*t)->right = NULL;
   }
@@ -86,9 +85,9 @@ void insert_avl(TREE_NODE** t, void *data, filter filter, int line ){
       }
     }
   }
-  else{
+  else{//word already in tree, add line number to list
     if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
-      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), l);
+      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
   }
 
   (*t)->height = max( height( (*t)->left ), height( (*t)->right ) ) + 1;
@@ -153,10 +152,10 @@ int balancing_factor(TREE_NODE * root){
 
 static int height( TREE_NODE* n )
 {
-    if( n == NULL )
-        return -1;
-    else
-        return n->height;
+  if( n == NULL )
+    return -1;
+  else
+    return n->height;
 }
 
 int is_leaf(TREE_NODE *root){

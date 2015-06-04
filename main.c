@@ -187,8 +187,6 @@ int main(int argc, char *argv[])
   tree = index_file(argv[1]);
 
   search_words(tree, argv[2]);
-  search_words(tree, argv[2]);
-  search_words(tree, argv[2]);
 
   return 0;
 }
