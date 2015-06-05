@@ -131,6 +131,7 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
       node = node->next;
       first_number = 0;
     }
+    strcat(result, "\n");
     return;
   }
   else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == -1){
@@ -144,13 +145,19 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
 
 }
 
-void search_words(TREE_NODE *root, char * file_name){
-  FILE *file;
+void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
+  FILE *file, *output_file;
   file = fopen(file_name,"r");
+  output_file = fopen(output_file_name,"w");
   if(!file){
     printf("arquivo de entrada invalido\n");
     return;
   }
+  if(!output_file){
+    printf("arquivo de saida invalido\n");
+    return;
+  }
+
   char line [ 1000 ];
 
   char *result = malloc(sizeof(char) * 150);
@@ -163,22 +170,26 @@ void search_words(TREE_NODE *root, char * file_name){
     W_TOKEN *token = malloc(sizeof(W_TOKEN));
     token->word = line;
     search_word(root, token, result);
-    printf("%s\n", result );
+    fprintf(output_file, "%s",result);
+    printf("%s", result );
   }
 
   end_time = (double)clock();
   time_elapsed = ( end_time - start_time )/CLOCKS_PER_SEC;
 
+  fprintf(output_file, "%s","\n\n");
+  fprintf(output_file, "O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);
   printf("\n");
   printf("O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);
 
   fclose(file);
+  fclose(output_file);
 
 }
 
 int main(int argc, char *argv[])
 {
-  if(argc != 3){
+  if(argc != 4){
     printf("entrada invalida\n");
     return 0;
   }
@@ -186,7 +197,7 @@ int main(int argc, char *argv[])
   TREE_NODE *tree = NULL;
   tree = index_file(argv[1]);
 
-  search_words(tree, argv[2]);
+  search_words(tree, argv[2], argv[3]);
 
   return 0;
 }
