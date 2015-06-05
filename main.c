@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <locale.h>
 
 //fill string up to len with zeros
 char * padd_string(char *str, int len){
@@ -52,6 +53,8 @@ int lex_order(void *str1, void *str2){
 
 int main(int argc, char *argv[])
 {
+  setlocale(LC_ALL,"");
+
   if(argc != 4){
     printf("entrada invalida\n");
     return 0;
