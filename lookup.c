@@ -9,7 +9,7 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
   if(!root){//word not found
     strcpy(result, "Consulta: ");
     strcat(result, ( (W_TOKEN *)word )->word);
-    strcat(result, "\t\tPalavra não encontrada");
+    strcat(result, "\t\tPalavra não encontrada\n");
     return;
   }
   else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 0){
