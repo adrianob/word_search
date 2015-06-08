@@ -1,3 +1,4 @@
+//functions for looking up words in a given avl tree and saving results to a file
 #include "lookup.h"
 #include "main.h"
 #include <stdio.h>
@@ -5,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+//look for word in the given tree and saves result string to result
 void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
   if(!root){//word not found
     strcpy(result, "Consulta: ");
@@ -12,15 +14,15 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
     strcat(result, "\t\tPalavra não encontrada\n");
     return;
   }
-  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 0){
+  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 0){//found word
     strcpy(result, "Consulta: ");
     strcat(result, ( (W_TOKEN *)word )->word);
     strcat(result, "\t\tPalavra encontrada nas linhas ");
     char line[20];
     line[0] = '\0';
-    int first_number = 1;
+    int first_number = 1;//used to remove comma from last number
     LIST_NODE *node = ( (W_TOKEN *)( root->data ) )->list;
-    while(node){
+    while(node){//print all lines in each word was found
       if(!first_number)
         strcat(result, ", ");
       sprintf(line, "%d", *(int *)node->data);
@@ -31,10 +33,10 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
     strcat(result, "\n");
     return;
   }
-  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == -1){
+  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == -1){//word bigger than root
     search_word(root->right, word, result);
   }
-  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 1){
+  else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 1){//word smaller than root
     search_word(root->left, word, result);
   }
 
@@ -42,6 +44,7 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
 
 }
 
+//search for all words given in file_name and save results to output_file_name
 void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
   FILE *file, *output_file;
   file = fopen(file_name,"r");
@@ -57,8 +60,9 @@ void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
 
   char line [ 1000 ];
 
-  char *result = malloc(sizeof(char) * 150);
+  char *result = malloc(sizeof(char) * 350);
 
+  //start benchmark
   double start_time, end_time, time_elapsed;
   start_time = (double)clock();
 
@@ -73,6 +77,7 @@ void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
 
   end_time = (double)clock();
   time_elapsed = ( end_time - start_time )/CLOCKS_PER_SEC;
+  //end benchmark
 
   fprintf(output_file, "%s","\n\n");
   fprintf(output_file, "O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);

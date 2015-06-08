@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <locale.h>
 
-//fill string up to len with zeros
+//fill string with zeros up to len
 char * padd_string(char *str, int len){
   char *padded = malloc(sizeof(char)*len + 1);
 
