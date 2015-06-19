@@ -53,6 +53,7 @@ int lex_order(void *str1, void *str2){
 
 int main(int argc, char *argv[])
 {
+  //all text files must be in UTF-8!
   setlocale(LC_ALL,"");
 
   if(argc != 4){

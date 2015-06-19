@@ -18,11 +18,11 @@ void search_word(TREE_NODE *root, W_TOKEN* word, char *result){
     strcpy(result, "Consulta: ");
     strcat(result, ( (W_TOKEN *)word )->word);
     strcat(result, "\t\tPalavra encontrada nas linhas ");
-    char line[20];
+    char line[1000];
     line[0] = '\0';
     int first_number = 1;//used to remove comma from last number
     LIST_NODE *node = ( (W_TOKEN *)( root->data ) )->list;
-    while(node){//print all lines in each word was found
+    while(node){//print all lines on which word was found
       if(!first_number)
         strcat(result, ", ");
       sprintf(line, "%d", *(int *)node->data);
@@ -58,9 +58,9 @@ void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
     return;
   }
 
-  char line [ 1000 ];
+  char line [ 10000 ];
 
-  char *result = malloc(sizeof(char) * 350);
+  char *result = malloc(sizeof(char) * 10000);
 
   //start benchmark
   double start_time, end_time, time_elapsed;
