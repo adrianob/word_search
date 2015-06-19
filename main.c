@@ -7,57 +7,28 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <wctype.h>
+#include <wchar.h>
 #include <locale.h>
 
-//fill string with zeros up to len
-char * padd_string(char *str, int len){
-  char *padded = malloc(sizeof(char)*len + 1);
-
-  padded[0] = '\0';
-  strcat(padded,str);
-  int i;
-  for(i = strlen(str);i<len;i++){
-    padded[i] = ' ';//blank char for lex order
-  }
-  padded[i] = '\0';
-
-  return padded;
+void str_to_lower(wchar_t *p){
+  for ( ; *p; ++p) *p = towlower(*p);
 }
 
-//0 if equal, -1 if str1 < str2, 1 otherwise
 int lex_order(void *str1, void *str2){
-  int order = 0;
-  char *s1,*s2;
+  int order;
+  const wchar_t *s1,*s2;
   s1 = ( (W_TOKEN *)str1 )->word;
   s2 = ( (W_TOKEN *)str2 )->word;
-
-  if(strlen(s1) < strlen(s2)){
-    s1 = padd_string(s1,strlen(s2));
-  }
-  else if(strlen(s1) > strlen(s2)){
-    s2 = padd_string(s2,strlen(s1));
-  }
-
-  int i;
-  for(i = 0; i < strlen(s1); i++){
-    if(tolower((s1)[i]) < tolower((s2)[i])){
-      return -1;
-    }
-    else if(tolower((s1)[i]) > tolower((s2)[i])){
-      return 1;
-    }
-  }
-
-  return order;
+  return wcscoll(s1,s2);
 }
 
-int main(int argc, char *argv[])
-{
-  //all text files must be in UTF-8!
+int main(int argc, char *argv[]){
+  //all input files must be in UTF-8!
   setlocale(LC_ALL,"");
 
   if(argc != 4){
-    printf("entrada invalida\n");
+    printf("entrada invalida, formato: entrada busca saida\n");
     return 0;
   }
 

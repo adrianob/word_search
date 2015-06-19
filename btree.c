@@ -41,53 +41,40 @@ TREE_NODE* double_right_rotate( TREE_NODE* root )
   return rotate_right( root );
 }
 
-int line_in_list(LIST_NODE *head, int line){
-  while(head){
-    if(*(int *)( head->data ) == line){
-      return 1;
-    }
-    head = head->next;
-  }
-
-  return 0;
-}
-
 void insert_avl(TREE_NODE** t, void *data, comparator comparator, int line ){
   int *line_number = malloc(sizeof(int));
   *line_number = line;
   if(!*t){//insert new node in tree
     *t = (TREE_NODE*)malloc(sizeof(TREE_NODE));
     (*t)->data = data;
-    if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
-      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
+    append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
     (*t)->height = 0;
     (*t)->left = (*t)->right = NULL;
   }
-  else if (comparator(data , (*t)->data) == -1 ){
+  else if (comparator(data , (*t)->data) < 0 ){
     insert_avl( &((*t)->left), data, comparator, line );
     if( height( (*t)->left ) - height( (*t)->right ) == 2 ){
-      if (comparator(data , (*t)->left->data) == -1 ){
+      if (comparator(data , (*t)->left->data) < 0 ){
         *t = rotate_left( *t );
       }
-      else if (comparator(data , (*t)->left->data) == 1 ){
+      else if (comparator(data , (*t)->left->data) > 0 ){
         *t = double_left_rotate( *t );
       }
     }
   }
-  else if (comparator(data , (*t)->data) == 1 ){
+  else if (comparator(data , (*t)->data) > 0 ){
     insert_avl( &( (*t)->right ), data, comparator, line );
     if( height( (*t)->right ) - height( (*t)->left ) == 2 ){
-      if (comparator(data , (*t)->right->data) == 1 ){
+      if (comparator(data , (*t)->right->data) > 0 ){
         *t = rotate_right( *t );
       }
-      else if (comparator(data , (*t)->right->data) == -1 ){
+      else if (comparator(data , (*t)->right->data) < 0 ){
         *t = double_right_rotate( *t );
       }
     }
   }
   else{//word already in tree, add line number to list
-    if(!line_in_list(( ( (W_TOKEN *)( (*t)->data ) )->list ), line))
-      append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
+    append(&( ( (W_TOKEN *)( (*t)->data ) )->list ), line_number);
   }
 
   (*t)->height = max( height( (*t)->left ), height( (*t)->right ) ) + 1;
