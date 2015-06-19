@@ -82,8 +82,8 @@ void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
   time_elapsed = ( end_time - start_time )/CLOCKS_PER_SEC;
   //end benchmark
 
-  fprintf(output_file, "%s","\n");
-  fprintf(output_file, "O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);
+  fwprintf(output_file, L"%s","\n");
+  fwprintf(output_file, L"O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);
   printf("\n");
   printf("O tempo gasto na busca foi de %fms.\n", time_elapsed*1000);
 
