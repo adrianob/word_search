@@ -9,4 +9,7 @@ typedef struct token_t {
   LIST_NODE * list;
 } W_TOKEN;
 
+
+void str_to_lower(wchar_t *p);
+int lex_order(void *str1, void *str2);
 #endif

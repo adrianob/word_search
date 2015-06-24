@@ -12,14 +12,14 @@ void search_word(TREE_NODE *root, W_TOKEN* word, wchar_t *result){
   if(!root){//word not found
     wcscpy(result, L"Consulta: ");
     wcscat(result, ( (W_TOKEN *)word )->word);
-    wcscat(result, L"\t\tPalavra não encontrada\n");
+    wcscat(result, L" Palavra não encontrada\n");
     return;
   }
   else if(lex_order(( (W_TOKEN *)( root->data ) ), word) == 0){//found word
     wcscpy(result, L"Consulta: ");
     wcscat(result, ( (W_TOKEN *)word )->word);
     wcscat(result, L" Palavra encontrada nas linhas ");
-    wchar_t line[1000];
+    wchar_t line[10000];
     line[0] = '\0';
     int first_number = 1;//used to remove comma from last number
     LIST_NODE *node = ( (W_TOKEN *)( root->data ) )->list;
@@ -68,7 +68,7 @@ void search_words(TREE_NODE *root, char * file_name, char * output_file_name){
   start_time = (double)clock();
 
   while ( fgetws ( line, sizeof line, file ) != NULL ){//read line by line
-    line[wcslen(line) -1] = '\0';//remove new line char
+    if(line[wcslen(line) -1] == '\n') line[wcslen(line) -1] = '\0';//remove new line char
     if(line[wcslen(line) -1] == ' ') line[wcslen(line) -1] = '\0';
     W_TOKEN *token = malloc(sizeof(W_TOKEN));
     str_to_lower(line);
